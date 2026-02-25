@@ -44,8 +44,8 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_robot_description(context: LaunchContext, description_package,
-                                description_file, arm_type,
-                                right_can_interface, left_can_interface):
+                               description_file, arm_type,
+                               right_can_interface, left_can_interface):
     """Generate robot description using xacro processing."""
     description_package_str = context.perform_substitution(description_package)
     description_file_str = context.perform_substitution(description_file)
@@ -74,8 +74,8 @@ def generate_robot_description(context: LaunchContext, description_package,
 
 
 def robot_nodes_spawner(context: LaunchContext, description_package,
-                         description_file, arm_type, controllers_file,
-                         right_can_interface, left_can_interface):
+                        description_file, arm_type, controllers_file,
+                        right_can_interface, left_can_interface):
     """Spawn robot_state_publisher and ros2_control_node."""
     robot_description = generate_robot_description(
         context, description_package, description_file, arm_type,
@@ -184,7 +184,8 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        arguments=['joint_state_broadcaster',
+                   '--controller-manager', '/controller_manager'],
     )
 
     # 3) physical_leader_relay 노드 (/joint_states → /real_joint_states)

@@ -70,8 +70,8 @@ def generate_robot_description(context: LaunchContext, description_package, desc
 
 
 def robot_nodes_spawner(context: LaunchContext, description_package, description_file,
-                         arm_type, use_fake_hardware, controllers_file,
-                         right_can_interface, left_can_interface, arm_prefix):
+                        arm_type, use_fake_hardware, controllers_file,
+                        right_can_interface, left_can_interface, arm_prefix):
     """Spawn robot_state_publisher and ros2_control_node."""
 
     robot_description = generate_robot_description(
@@ -195,7 +195,8 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "robot_controller",
             default_value="forward_position_controller",
-            choices=["forward_position_controller", "joint_trajectory_controller"],
+            choices=["forward_position_controller",
+                     "joint_trajectory_controller"],
             description="Robot controller to start.",
         ),
         DeclareLaunchArgument(
@@ -259,7 +260,8 @@ def generate_launch_description():
     arm_prefix = LaunchConfiguration("arm_prefix")
 
     controllers_file = PathJoinSubstitution(
-        [FindPackageShare(runtime_config_package), "config", "v10_controllers", controllers_file]
+        [FindPackageShare(runtime_config_package), "config",
+         "v10_controllers", controllers_file]
     )
 
     robot_nodes_spawner_func = OpaqueFunction(
