@@ -142,8 +142,8 @@ def bimanual_converter_spawner(context: LaunchContext, arm_prefix):
 
     return [Node(
         package="openarm_converters",
-        executable="bimanual_converter",
-        name="bimanual_converter",
+        executable="sim_to_real_converter",
+        name="sim_to_real_converter",
         namespace=ns,
         output="screen",
         parameters=[{
@@ -156,14 +156,10 @@ def bimanual_converter_spawner(context: LaunchContext, arm_prefix):
             "left_gripper_cmd_topic": nstopic("/left_gripper_controller/commands"),
             "right_gripper_cmd_topic": nstopic("/right_gripper_controller/commands"),
 
-            # 주기/필터
+            # 주기/필터/안전
             "command_rate_hz": float(context.perform_substitution(LaunchConfiguration("command_rate_hz"))),
             "lpf_alpha": float(context.perform_substitution(LaunchConfiguration("lpf_alpha"))),
-
-            # 피드백 릴레이 (선택)
-            "enable_feedback_relay": context.perform_substitution(LaunchConfiguration("enable_feedback_relay")).lower() in ["true", "1", "yes"],
-            "hw_joint_state_topic": nstopic("/joint_states"),
-            "sim_feedback_topic": nstopic("/real_joint_states"),
+            "timeout_seconds": float(context.perform_substitution(LaunchConfiguration("timeout_seconds"))),
         }],
     )]
 
@@ -233,18 +229,18 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "command_rate_hz",
-            default_value="20.0",
+            default_value="50.0",
             description="Rate at which commands are sent to the physical arm (Hz).",
+        ),
+        DeclareLaunchArgument(
+            "timeout_seconds",
+            default_value="0.5",
+            description="Timeout for Isaac Sim joint state signal (seconds).",
         ),
         DeclareLaunchArgument(
             "lpf_alpha",
             default_value="0.25",
             description="Low-pass filter alpha for command smoothing (0=no update, 1=no filter).",
-        ),
-        DeclareLaunchArgument(
-            "enable_feedback_relay",
-            default_value="true",
-            description="Relay /joint_states -> /real_joint_states for Isaac Sim feedback.",
         ),
     ]
 
